@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useReducer } from "react";
+import { ctx } from "./context";
+import ProductList from "./pages/ProductList";
+import { initialState, reducer } from "./reducer";
 
-function App() {
+const App: React.FC = (): JSX.Element => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    fetch("api/products.json")
+      .then((res) => res.json())
+      .then((data) => dispatch({ type: "SET_PRODUCTS", payload: data }));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ctx.Provider value={state}>
+      {state.products.length ? (
+        <>
+          {console.log(state)}
+          {state.products.map((product) => (
+            <ProductList
+              key={product.id}
+              id={product.id}
+              name={product.name}
+              price={product.price}
+              available={product.available}
+            />
+          ))}
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </ctx.Provider>
   );
-}
+};
 
 export default App;
