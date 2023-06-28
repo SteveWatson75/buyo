@@ -29,7 +29,7 @@ const Layout: React.FC<Props> = ({ children }): JSX.Element => {
           <img src={Logo} height={80} alt="Buyo" onClick={onClickList} />
           <div>
             <img src={Cart} height={40} alt="Cart" onClick={onClickCart}></img>
-            <h3>Cart ({state.cart.length})</h3>
+            <h3>Cart ({state?.cart.length})</h3>
           </div>
         </HeaderContainer>
       </header>
