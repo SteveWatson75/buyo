@@ -1,25 +1,36 @@
-import React from "react";
-import { ListContainer } from "./styled";
+import React, { useEffect, useReducer } from "react";
+import ProductListItem from "../../components/ProductListItem";
+import { ctx } from "../../context";
+import { initialState, reducer } from "../../reducer";
+import { ProductListContainer } from "./styled";
 
-interface ProductProps {
-  id: number;
-  name: string;
-  price: number;
-  available: boolean;
-}
+const ProductList: React.FC = (): JSX.Element => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-const ProductList: React.FC<ProductProps> = ({
-  id,
-  name,
-  price,
-  available,
-}: ProductProps): JSX.Element => {
+  useEffect(() => {
+    fetch("api/products.json")
+      .then((res) => res.json())
+      .then((data) => dispatch({ type: "SET_PRODUCTS", payload: data }));
+  }, []);
+
   return (
-    <ListContainer>
-      <h2>{name}</h2>
-      <p>{price} SEK</p>
-      <button>Add to Cart</button>
-    </ListContainer>
+    <ctx.Provider value={state}>
+      {state.products.length ? (
+        <>
+          {state.products.map((product) => (
+            <ProductListItem
+              key={product.id}
+              name={product.name}
+              price={product.price}
+            />
+          ))}
+        </>
+      ) : (
+        <ProductListContainer>
+          <p>Loading...</p>
+        </ProductListContainer>
+      )}
+    </ctx.Provider>
   );
 };
 
