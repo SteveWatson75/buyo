@@ -5,14 +5,31 @@ export interface ProductInterface {
   brand: string;
   available: boolean;
   weight: number;
-  options?: ProductOptionsInterface[];
+  options?: [
+    {
+      color: string | string[];
+      power?: number[] | null;
+      storage?: string[] | null;
+      quantity: number;
+    }
+  ];
+  reservedQuantity?: number;
 }
 
-interface ProductOptionsInterface {
-  color: string | string[];
-  power?: number[];
-  storage?: string[];
-  quantity: number;
+export interface CartProductInterface {
+  id: number;
+  name: string;
+  price: number;
+  brand: string;
+  available: boolean;
+  weight: number;
+  options?: {
+    color: string;
+    power?: number | null;
+    storage?: string | null;
+    quantity: number;
+  };
+  reservedQuantity?: number;
 }
 
 export interface StateInterface {
