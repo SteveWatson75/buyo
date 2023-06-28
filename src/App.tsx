@@ -1,6 +1,10 @@
 import React, { useEffect, useReducer } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ctx } from "./context";
-import ProductList from "./pages/ProductList";
+import Layout from "./layout";
+import Cart from "./pages/Cart";
+import ProductDetail from "./pages/ProductDetail";
+import ProductList from "./pages/ProductList/ProductList";
 import { initialState, reducer } from "./reducer";
 
 const App: React.FC = (): JSX.Element => {
@@ -14,22 +18,18 @@ const App: React.FC = (): JSX.Element => {
 
   return (
     <ctx.Provider value={state}>
-      {state.products.length ? (
-        <>
-          {console.log(state)}
-          {state.products.map((product) => (
-            <ProductList
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              price={product.price}
-              available={product.available}
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<ProductList />} />
+            <Route
+              path="products/:title"
+              element={<ProductDetail dispatch={dispatch} />}
             />
-          ))}
-        </>
-      ) : (
-        <p>Loading...</p>
-      )}
+            <Route path="/cart" element={<Cart dispatch={dispatch} />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
     </ctx.Provider>
   );
 };
